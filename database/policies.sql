@@ -1,34 +1,45 @@
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own profile"
-ON users
+ON profiles
 FOR SELECT
 USING (auth.uid() = id);
 
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public read active products"
+-- Anónimos y usuarios: productos activos con al menos una variante con stock; admin ve todos
+CREATE POLICY "Public read active products with stock"
 ON products
 FOR SELECT
 USING (
-  active = true
-  OR auth.uid() = user_id
+  (active = true AND EXISTS (
+    SELECT 1 FROM variants v
+    WHERE v.product_id = products.id AND v.active = true AND v.stock > 0
+  ))
+  OR auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
 );
 
-CREATE POLICY "Owner can insert products"
+-- Solo el dueño (admin) puede crear/editar/eliminar productos
+CREATE POLICY "Admin can insert products"
 ON products
 FOR INSERT
-WITH CHECK (auth.uid() = user_id);
+WITH CHECK (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
 
-CREATE POLICY "Owner can update products"
+CREATE POLICY "Admin can update products"
 ON products
 FOR UPDATE
-USING (auth.uid() = user_id);
+USING (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
 
-CREATE POLICY "Owner can delete products"
+CREATE POLICY "Admin can delete products"
 ON products
 FOR DELETE
-USING (auth.uid() = user_id);
+USING (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
 
 ALTER TABLE user_favorites ENABLE ROW LEVEL SECURITY;
 
@@ -49,58 +60,35 @@ USING (auth.uid() = user_id);
 
 ALTER TABLE variants ENABLE ROW LEVEL SECURITY;
 
--- SELECT admin/owner
-CREATE POLICY "Owner can read variants"
+-- Anónimos y usuarios: solo variantes activas y con stock; admin ve todas
+CREATE POLICY "Public read active variants with stock"
 ON variants
 FOR SELECT
 USING (
-  auth.uid() IN (
-    SELECT user_id
-    FROM products
-    WHERE products.id = variants.product_id
-  )
+  (active = true AND stock > 0)
+  OR auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
 );
 
--- Lectura pública de variantes activas (catálogo)
-CREATE POLICY "Public read active variants"
-ON variants
-FOR SELECT
-USING (active = true);
-
--- INSERT
-CREATE POLICY "Owner can insert variants"
+-- Solo el dueño (admin) puede crear/editar/eliminar variantes
+CREATE POLICY "Admin can insert variants"
 ON variants
 FOR INSERT
 WITH CHECK (
-  auth.uid() IN (
-    SELECT user_id
-    FROM products
-    WHERE products.id = variants.product_id
-  )
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
 );
 
--- UPDATE
-CREATE POLICY "Owner can update variants"
+CREATE POLICY "Admin can update variants"
 ON variants
 FOR UPDATE
 USING (
-  auth.uid() IN (
-    SELECT user_id
-    FROM products
-    WHERE products.id = variants.product_id
-  )
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
 );
 
--- DELETE
-CREATE POLICY "Owner can delete variants"
+CREATE POLICY "Admin can delete variants"
 ON variants
 FOR DELETE
 USING (
-  auth.uid() IN (
-    SELECT user_id
-    FROM products
-    WHERE products.id = variants.product_id
-  )
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
 );
 
 
@@ -195,13 +183,51 @@ USING (
   )
 );
 
+-- ========== AMBASSADORS ==========
+ALTER TABLE ambassadors ENABLE ROW LEVEL SECURITY;
+
+-- Validar código en checkout: cualquiera puede leer embajadores activos (solo para lookup por code).
+-- Un embajador con user_id puede ver su propio registro (para dashboard después).
+CREATE POLICY "Read active ambassadors or own ambassador row"
+ON ambassadors
+FOR SELECT
+USING (is_active = true OR user_id = auth.uid());
+
+-- Solo admins crean/editan/eliminan embajadores (códigos, descuentos, activar/desactivar).
+CREATE POLICY "Admin can insert ambassadors"
+ON ambassadors
+FOR INSERT
+WITH CHECK (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
+
+CREATE POLICY "Admin can update ambassadors"
+ON ambassadors
+FOR UPDATE
+USING (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
+
+CREATE POLICY "Admin can delete ambassadors"
+ON ambassadors
+FOR DELETE
+USING (
+  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+);
+
+-- ========== ORDERS ==========
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
-/* SELECT */
-CREATE POLICY "User can read own orders"
+-- Cliente ve sus órdenes; embajador ve las órdenes donde se usó su código (para dashboard).
+CREATE POLICY "User can read own orders or orders with own ambassador code"
 ON orders
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (
+  auth.uid() = user_id
+  OR orders.ambassador_id IN (
+    SELECT id FROM ambassadors WHERE user_id = auth.uid()
+  )
+);
 
 /* INSERT */
 CREATE POLICY "User can create own order"

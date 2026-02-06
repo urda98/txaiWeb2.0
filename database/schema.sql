@@ -11,10 +11,11 @@ CREATE TYPE gender_type AS ENUM ('male', 'female', 'other');
 
 CREATE TYPE role_type AS ENUM ('admin', 'user');
 
-CREATE TABLE users (
+CREATE TYPE discount_type AS ENUM ('0', '10', '20', '30');
+
+CREATE TABLE profiles (
     id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email text NOT NULL UNIQUE,
-    password_hash text NOT NULL,
     role role_type NOT NULL DEFAULT 'user',
     gender gender_type NOT NULL,
     first_name text NOT NULL,
@@ -28,9 +29,10 @@ CREATE TABLE users (
     updated_at timestamptz DEFAULT NOW()
 );
 
+-- Productos son gestionados solo por el dueño (admin). user_id = perfil del dueño de la empresa.
 CREATE TABLE products (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     name text NOT NULL,
     description text,
     fabric fabric_type NOT NULL,
@@ -42,7 +44,7 @@ CREATE TABLE products (
 
 CREATE TABLE user_favorites (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     product_id uuid NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     created_at timestamptz DEFAULT NOW(),
     UNIQUE (user_id, product_id)
@@ -66,11 +68,11 @@ CREATE TABLE variants (
 
 CREATE TABLE carts (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     status cart_status_type DEFAULT 'active',
     created_at timestamptz DEFAULT NOW(),
     updated_at timestamptz DEFAULT NOW(),
-    UNIQUE (user_id, status)
+    UNIQUE (user_id) WHERE status = 'active'
 );
 
 CREATE TABLE cart_items (
@@ -82,13 +84,28 @@ CREATE TABLE cart_items (
     updated_at timestamptz DEFAULT NOW()
 );
 
+CREATE TABLE ambassadors (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL,
+    discount discount_type NOT NULL,
+    is_active boolean DEFAULT true,
+    user_id uuid REFERENCES profiles(id) ON DELETE SET NULL,
+    created_at timestamptz DEFAULT NOW(),
+    updated_at timestamptz DEFAULT NOW(),
+    UNIQUE (user_id)
+);
+
 CREATE TABLE orders (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    ambassador_id uuid REFERENCES ambassadors(id) ON DELETE SET NULL,
+    discount_percent discount_type DEFAULT '0',
+    final_total numeric(10,2) NOT NULL,
     total_amount numeric(10,2) NOT NULL,
     status order_status_type DEFAULT 'pending',
     created_at timestamptz DEFAULT NOW(),
-    updated_at timestamptz DEFAULT NOW(),
+    updated_at timestamptz DEFAULT NOW()
 );
 
 CREATE TABLE order_items (
@@ -102,7 +119,6 @@ CREATE TABLE order_items (
 );
 
 
-
 -- Triggers para actualizar updated_at
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER AS $$
@@ -112,8 +128,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER users_updated_at
-  BEFORE UPDATE ON users
+CREATE TRIGGER profiles_updated_at
+  BEFORE UPDATE ON profiles
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER ambassadors_updated_at
+  BEFORE UPDATE ON ambassadors
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 CREATE TRIGGER products_updated_at
