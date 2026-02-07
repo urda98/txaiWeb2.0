@@ -71,9 +71,11 @@ CREATE TABLE carts (
     user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     status cart_status_type DEFAULT 'active',
     created_at timestamptz DEFAULT NOW(),
-    updated_at timestamptz DEFAULT NOW(),
-    UNIQUE (user_id) WHERE status = 'active'
+    updated_at timestamptz DEFAULT NOW()
 );
+
+-- Un usuario solo puede tener un carrito activo a la vez
+CREATE UNIQUE INDEX carts_user_active_unique ON carts (user_id) WHERE status = 'active';
 
 CREATE TABLE cart_items (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
