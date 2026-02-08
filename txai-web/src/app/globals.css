@@ -3,7 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --txai-red: #8B2F2F;
+  --txai-red: #81191F;
+  --txai-blue: #C1D7EE;
 }
 
 @theme inline {
