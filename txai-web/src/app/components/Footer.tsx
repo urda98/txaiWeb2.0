@@ -1,39 +1,36 @@
 import Link from "next/link";
 import {
-  Facebook,
-  Twitter,
+  //Facebook,
+  //Twitter,
   Instagram,
-  Youtube,
+  //Youtube,
   Globe,
   ChevronDown,
 } from "lucide-react";
 
 const socialLinks = [
-  { href: "#", icon: Facebook, label: "Facebook" },
-  { href: "#", icon: Twitter, label: "X (Twitter)" },
+  //{ href: "#", icon: Facebook, label: "Facebook" },
+  //{ href: "#", icon: Twitter, label: "X (Twitter)" },
   { href: "#", icon: Instagram, label: "Instagram" },
-  { href: "#", icon: Youtube, label: "YouTube" },
+  //{ href: "#", icon: Youtube, label: "YouTube" },
 ];
 
 const getHelpLinks = [
-  { href: "#", label: "Centro de ayuda" },
+  { href: "#", label: "Preguntas frecuents" },
   { href: "#", label: "Envío" },
   { href: "#", label: "Devoluciones y cambios" },
-  { href: "#", label: "Pedidos de equipos" },
   { href: "#", label: "Contáctanos" },
 ];
 
 const companyLinks = [
   { href: "#", label: "Nuestra historia" },
-  { href: "#", label: "Nuestro impacto" },
-  { href: "#", label: "Prensa" },
-  { href: "#", label: "Carreras" },
-  { href: "#", label: "Aplicación móvil" },
+  { href: "#", label: "Registro de marca" },
 ];
 
 const guidesLinks = [
   { href: "#", label: "Guías de tallas" },
   { href: "#", label: "Tecnología de la tela" },
+  { href: "#", label: "Instrucciones de cuidado" },
 ];
 
 const legalLinks = [
@@ -56,7 +53,7 @@ export default function Footer() {
             >
               TXAI
             </Link>
-            <p className="text-sm mb-6">#TXAI</p>
+            <p className="text-sm mb-6">#EleganciaEnCadaGuardia</p>
             <div className="flex gap-4">
               {socialLinks.map(({ href, icon: Icon, label }) => (
                 <Link
