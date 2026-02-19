@@ -3,6 +3,7 @@ import {
   //Facebook,
   //Twitter,
   Instagram,
+  MessageCircle,
   //Youtube,
   Globe,
   ChevronDown,
@@ -11,7 +12,8 @@ import {
 const socialLinks = [
   //{ href: "#", icon: Facebook, label: "Facebook" },
   //{ href: "#", icon: Twitter, label: "X (Twitter)" },
-  { href: "#", icon: Instagram, label: "Instagram" },
+  { href: "https://www.instagram.com/use.txai/", icon: Instagram, label: "Instagram" },
+  { href: "#", icon: MessageCircle, label: "Whatsapp" },
   //{ href: "#", icon: Youtube, label: "YouTube" },
 ];
 
@@ -60,6 +62,8 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
                   <Icon size={20} strokeWidth={1.5} />
