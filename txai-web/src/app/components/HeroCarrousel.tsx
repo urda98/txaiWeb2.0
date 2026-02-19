@@ -6,28 +6,33 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 
-// Array de datos de los banners
 const banners = [
   {
     id: 1,
-    title: "TXAI ESSENTIALS",
-    subtitle: "Elegancia en cada guardia",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2070&auto=format&fit=crop",
+    title: "COLECCIÓN 2026",
+    subtitle: "Confort que te acompaña todo el día",
+    image: "/assets/telasTxai.png",
     cta: "COMPRAR AHORA",
+    objectFit: "cover",
+    objectPosition: "center center",
   },
   {
     id: 2,
     title: "NUEVOS DISEÑOS",
     subtitle: "Tecnología textil de alto rendimiento",
-    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2070&auto=format&fit=crop",
-    cta: "VER HOMBRE",
+    image: "/assets/todasTxai.png",
+    cta: "VER MUJER",
+    objectFit: "cover",
+    objectPosition: "50% 30%",
   },
   {
     id: 3,
-    title: "COLECCIÓN 2026",
-    subtitle: "Confort que te acompaña todo el día",
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop",
-    cta: "VER MUJER",
+    title: "TXAI",
+    subtitle: "Elegancia en cada guardia",
+    image: "/assets/txaiPortada.png",
+    cta: "COMPRAR AHORA",
+    objectFit: "cover",
+    objectPosition: "50% 22%",
   }
 ];
 
@@ -56,7 +61,10 @@ export default function HeroCarrousel() {
                 src={banner.image}
                 alt={banner.title}
                 fill
-                className="object-cover"
+                style={{
+                  objectFit: banner.objectFit as 'cover' | 'contain' | 'fill',
+                  objectPosition: banner.objectPosition ?? "center center",
+                }}
                 priority={banner.id === 1}
               />
               {/* Overlay oscuro para legibilidad del texto */}
@@ -73,7 +81,7 @@ export default function HeroCarrousel() {
                   {banner.subtitle}
                 </p>
                 <div className="pt-4">
-                  <button className="bg-white text-[var(--txai-red)] px-8 py-4 rounded-md font-bold font-montserrat hover:bg-[#6a1419] transition-all transform hover:scale-105 active:scale-95 shadow-xl">
+                  <button className="bg-white text-[var(--txai-red)] px-8 py-4 rounded-md font-bold font-montserrat hover:bg-[var(--txai-red)] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl">
                     {banner.cta}
                   </button>
                 </div>
