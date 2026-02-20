@@ -4,6 +4,7 @@ import {
   //Twitter,
   Instagram,
   MessageCircle,
+  Mail,
   //Youtube,
   Globe,
   ChevronDown,
@@ -14,6 +15,7 @@ const socialLinks = [
   //{ href: "#", icon: Twitter, label: "X (Twitter)" },
   { href: "https://www.instagram.com/use.txai/", icon: Instagram, label: "Instagram" },
   { href: "#", icon: MessageCircle, label: "Whatsapp" },
+  { href: "mailto:txaiindumentaria@gmail.com", icon: Mail, label: "Email" },
   //{ href: "#", icon: Youtube, label: "YouTube" },
 ];
 

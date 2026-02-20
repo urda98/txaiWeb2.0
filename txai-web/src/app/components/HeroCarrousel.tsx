@@ -20,10 +20,10 @@ const banners = [
     id: 2,
     title: "NUEVOS DISEÑOS",
     subtitle: "Tecnología textil de alto rendimiento",
-    image: "/assets/todasTxai.png",
+    image: "/assets/mujeres.png",
     cta: "VER MUJER",
     objectFit: "cover",
-    objectPosition: "50% -10%",
+    objectPosition: "50% -30%",
   },
   {
     id: 3,
