@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus, Heart } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { Product } from "@/types/products";
 
 type ProductCardProps = {
@@ -21,7 +20,6 @@ function formatPrice(price: number) {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(false);
   const tagLabel =
     product.tag === "best_seller" ? "MÁS VENDIDO" : product.tag === "new" ? "NUEVO" : null;
 
@@ -29,7 +27,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="group flex flex-col">
-      {/* Sin Link en la imagen: navegación por onClick. Así corazón y + reciben el clic sin conflicto */}
       <div className="relative aspect-square w-full overflow-hidden rounded bg-zinc-100">
         <button
           type="button"
@@ -55,20 +52,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             Sin imagen
           </div>
         )}
-
-        {/* Corazón: mismo patrón que el código que compartiste — sin Link que lo tape */}
-        <button
-          type="button"
-          onClick={() => setIsFavorite((prev) => !prev)}
-          className={`absolute right-2 top-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 p-1 shadow-sm transition-colors hover:bg-white hover:text-[var(--txai-red)] ${isFavorite ? "text-[var(--txai-red)]" : "text-zinc-700"}`}
-          aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
-        >
-          <Heart
-            className="h-4 w-4"
-            fill="none"
-            strokeWidth={1.5}
-          />
-        </button>
 
         {/* Botón + al hacer hover (añadir al carrito) */}
         <button
