@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ShoppingCart, User, Search} from "lucide-react";
+import { useState } from "react";
+import { Heart, ShoppingCart, User, Search } from "lucide-react";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
-export default function Navbar () {
+export default function Navbar() {
+    const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
     return (
         <nav className="sticky top-0 z-50 w-full bg-white text-[var(--txai-red)] border-b border-neutral-200">
             <div className="container mx-auto px-4 lg:px-8 py-4 flex items-center justify-between">
@@ -42,9 +48,24 @@ export default function Navbar () {
 
                     {/* Icons */}
                     <div className="flex items-center gap-1 md:gap-3">
-                        <Link className="p-2 hover:bg-gray-50 rounded-full transition-colors" href="/" aria-label="Login">
+                        <button
+                            type="button"
+                            onClick={() => setAuthModal("login")}
+                            className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+                            aria-label="Iniciar sesión"
+                        >
                             <User size={20} className="text-gray-700" />
-                        </Link>
+                        </button>
+                        <LoginModal
+                            isOpen={authModal === "login"}
+                            onClose={() => setAuthModal(null)}
+                            onOpenRegister={() => setAuthModal("register")}
+                        />
+                        <RegisterModal
+                            isOpen={authModal === "register"}
+                            onClose={() => setAuthModal(null)}
+                            onOpenLogin={() => setAuthModal("login")}
+                        />
                         <Link className="p-2 hover:bg-gray-50 rounded-full transition-colors relative" href="/" aria-label="Favoritos">
                             <Heart size={20} className="text-gray-700" />
                         </Link>

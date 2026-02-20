@@ -45,20 +45,22 @@ const legalLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#282828] text-[#A6A6A6] mt-auto">
-      <div className="max-w-7xl mx-auto px-8 py-12 md:px-12">
+    <footer className="w-full min-w-0 bg-[#212121] text-[#B0B0B0] mt-auto overflow-x-hidden box-border">
+      <div className="w-full max-w-[100vw] box-border mx-auto px-4 py-12 sm:px-5 sm:py-14 md:px-6 md:py-14 lg:px-8 lg:py-16 xl:px-10">
         {/* Top section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-12">
+        <div className="grid grid-cols-1 min-w-0 gap-10 pb-12 sm:gap-12 sm:pb-14 md:grid-cols-2 lg:grid-cols-6 lg:gap-14 lg:pb-16">
           {/* Brand column */}
-          <div className="lg:col-span-2">
+          <div className="min-w-0 lg:col-span-2">
             <Link
               href="/"
-              className="inline-block text-2xl font-bold uppercase tracking-tight text-[#A6A6A6] hover:text-white transition-colors mb-1"
+              className="inline-block text-3xl font-bold uppercase tracking-tight text-white hover:opacity-90 transition-opacity mb-2"
             >
               TXAI
             </Link>
-            <p className="text-sm mb-6">#EleganciaEnCadaGuardia</p>
-            <div className="flex gap-4">
+            <p className="text-sm uppercase tracking-wide text-white/90 mb-8">
+              #EleganciaEnCadaGuardia
+            </p>
+            <div className="flex gap-5">
               {socialLinks.map(({ href, icon: Icon, label }) => (
                 <Link
                   key={label}
@@ -66,25 +68,25 @@ export default function Footer() {
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
+                  className="text-white hover:opacity-80 transition-opacity"
                 >
-                  <Icon size={20} strokeWidth={1.5} />
+                  <Icon size={22} strokeWidth={1.5} />
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Get Help column */}
-          <div>
-            <h3 className="font-bold text-[#A6A6A6] uppercase tracking-wide text-sm mb-4">
+          <div className="min-w-0">
+            <h3 className="font-bold text-white uppercase tracking-wide text-sm mb-5">
               Obtén ayuda
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-3 text-sm">
               {getHelpLinks.map(({ href, label }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="hover:text-white transition-colors"
+                    className="text-[#B0B0B0] hover:text-white transition-colors"
                   >
                     {label}
                   </Link>
@@ -93,32 +95,36 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company & Guides column */}
-          <div>
-            <h3 className="font-bold text-[#A6A6A6] uppercase tracking-wide text-sm mb-4">
+          {/* Company column */}
+          <div className="min-w-0">
+            <h3 className="font-bold text-white uppercase tracking-wide text-sm mb-5">
               Nuestra empresa
             </h3>
-            <ul className="space-y-2 text-sm mb-6">
+            <ul className="space-y-3 text-sm">
               {companyLinks.map(({ href, label }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="hover:text-white transition-colors"
+                    className="text-[#B0B0B0] hover:text-white transition-colors"
                   >
                     {label}
                   </Link>
                 </li>
               ))}
             </ul>
-            <h3 className="font-bold text-[#A6A6A6] uppercase tracking-wide text-sm mb-4">
+          </div>
+
+          {/* Guías column */}
+          <div className="min-w-0">
+            <h3 className="font-bold text-white uppercase tracking-wide text-sm mb-5">
               Guías
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-3 text-sm">
               {guidesLinks.map(({ href, label }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="hover:text-white transition-colors"
+                    className="text-[#B0B0B0] hover:text-white transition-colors"
                   >
                     {label}
                   </Link>
@@ -128,16 +134,16 @@ export default function Footer() {
           </div>
 
           {/* Legal column */}
-          <div>
-            <h3 className="font-bold text-[#A6A6A6] uppercase tracking-wide text-sm mb-4">
+          <div className="min-w-0">
+            <h3 className="font-bold text-white uppercase tracking-wide text-sm mb-5">
               Legal
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-3 text-sm">
               {legalLinks.map(({ href, label }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="hover:text-white transition-colors"
+                    className="text-[#B0B0B0] hover:text-white transition-colors"
                   >
                     {label}
                   </Link>
@@ -148,27 +154,27 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-[#404040] pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <p className="text-sm">
+        <div className="border-t border-[#4A4A4A] pt-8 min-w-0">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 min-w-0">
+            <div className="min-w-0 w-full md:w-auto space-y-1">
+              <p className="text-sm text-[#B0B0B0] break-words">
                 © {new Date().getFullYear()} TXAI. Todos los derechos reservados.
               </p>
-              <div className="flex gap-2 mt-2 text-sm">
+              <p className="text-sm text-[#B0B0B0]">
                 <Link href="#" className="hover:text-white transition-colors">
                   Términos de uso
                 </Link>
-                <span>•</span>
+                <span className="mx-1.5">·</span>
                 <Link href="#" className="hover:text-white transition-colors">
                   Política de privacidad
                 </Link>
-              </div>
+              </p>
             </div>
 
             {/* Locale selector */}
             <button
               type="button"
-              className="flex items-center gap-2 text-sm hover:text-white transition-colors"
+              className="flex items-center gap-2 text-sm text-[#B0B0B0] hover:text-white transition-colors shrink-0"
               aria-label="Cambiar país e idioma"
             >
               <Globe size={18} />
