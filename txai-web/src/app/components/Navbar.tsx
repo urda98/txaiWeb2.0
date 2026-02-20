@@ -10,7 +10,7 @@ import RegisterModal from "./RegisterModal";
 export default function Navbar() {
     const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
     return (
-        <nav className="sticky top-0 z-50 w-full bg-white text-[var(--txai-red)] border-b border-neutral-200">
+        <nav className="sticky top-0 z-50 w-full bg-white text-[var(--txai-red)]">
             <div className="container mx-auto px-4 lg:px-8 py-4 flex items-center justify-between">
                 {/* Left: Logo */}
                 <div className="flex-shrink-0">
