@@ -18,6 +18,7 @@ export type Product = {
   name: string;
   description?: string | null;
   imageUrl?: string | null;
+  hoverImageUrl?: string | null;
   tag?: "best_seller" | "new" | null;
   price: number;
   fabric: FabricType;

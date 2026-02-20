@@ -31,6 +31,8 @@ const MOCK_PRODUCTS: Product[] = [
     name: "Ambo Leon Classic",
     price: 85900,
     fabric: "Cotton",
+    imageUrl: "/assets/hombre.png",
+    hoverImageUrl: "/assets/hombre1.png",
     colors: [
       { id: "c1", name: "Vino", hex: "#722F37" },
       { id: "c2", name: "Azul marino", hex: "#1e3a5f" },
@@ -83,7 +85,20 @@ type OpenFilterType = "color" | "size" | "productType" | "style" | "fit" | "fabr
 export default function ProductListingSection() {
   const [filters, setFilters] = useState<ProductFilters>({ category: "all" });
   const [openFilter, setOpenFilter] = useState<OpenFilterType>(null);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const filtersRef = useRef<HTMLDivElement>(null);
+
+  const handleFavorite = (productId: string) => {
+    setFavoriteIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  };
 
   const setCategory = (category: ProductCategory) => {
     setFilters((prev) => ({ ...prev, category }));
@@ -400,7 +415,12 @@ export default function ProductListingSection() {
         {/* Grid de product cards */}
         <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
           {MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onFavorite={handleFavorite}
+              isFavorite={favoriteIds.has(product.id)}
+            />
           ))}
         </div>
         <p className="mt-6 text-center text-sm text-zinc-500">

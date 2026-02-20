@@ -1,13 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Heart } from "lucide-react";
 import type { Product } from "@/types/products";
 
 type ProductCardProps = {
   product: Product;
+  onFavorite?: (productId: string) => void;
+  isFavorite?: boolean;
 };
 
 function formatPrice(price: number) {
@@ -18,45 +19,75 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
-  const router = useRouter();
+export default function ProductCard({ product, onFavorite, isFavorite = false }: ProductCardProps) {
   const tagLabel =
     product.tag === "best_seller" ? "MÁS VENDIDO" : product.tag === "new" ? "NUEVO" : null;
 
-  const goToProduct = () => router.push(`/productos/${product.id}`);
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onFavorite?.(product.id);
+  };
 
   return (
     <article className="group flex flex-col">
-      <div className="relative aspect-square w-full overflow-hidden rounded bg-zinc-100">
-        <button
-          type="button"
-          onClick={goToProduct}
-          className="absolute inset-0 z-0 block h-full w-full cursor-pointer border-0 bg-transparent p-0"
-          aria-label={`Ver ${product.name}`}
-        >
-          <span className="sr-only">Ver detalle</span>
-        </button>
+      <Link href={`/productos/${product.id}`} className="relative aspect-[2/3] w-full overflow-hidden rounded bg-zinc-100 block">
         {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.name}
-            fill
-            className="pointer-events-none object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
+          <>
+            {/* Imagen principal */}
+            <Image
+              src={product.imageUrl}
+              alt={product.name}
+              fill
+              className={`object-contain scale-[1.05] transition-all duration-500 ${
+                product.hoverImageUrl ? "group-hover:opacity-0" : ""
+              }`}
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+            {/* Imagen de hover */}
+            {product.hoverImageUrl && (
+              <Image
+                src={product.hoverImageUrl}
+                alt={product.name}
+                fill
+                className="object-contain scale-[1.05] opacity-0 transition-opacity duration-800 group-hover:opacity-100"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            )}
+          </>
         ) : (
           <div
             role="presentation"
-            className="pointer-events-none flex h-full w-full items-center justify-center bg-zinc-200 text-zinc-400"
+            className="flex h-full w-full items-center justify-center bg-zinc-200 text-zinc-400"
           >
             Sin imagen
           </div>
+        )}
+
+        {/* Botón corazón para favoritos */}
+        {onFavorite && (
+          <button
+            type="button"
+            onClick={handleFavoriteClick}
+            className="absolute top-2 right-2 z-20 flex h-8 w-8 cursor-pointer items-center justify-center transition-all hover:scale-110"
+            aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+          >
+            <Heart
+              className={`h-5 w-5 transition-all ${
+                isFavorite
+                  ? "fill-[var(--txai-red)] text-[var(--txai-red)]"
+                  : "text-gray-800"
+              }`}
+              strokeWidth={2}
+            />
+          </button>
         )}
 
         {/* Botón + al hacer hover (añadir al carrito) */}
         <button
           type="button"
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             // TODO: añadir al carrito
           }}
@@ -65,19 +96,19 @@ export default function ProductCard({ product }: ProductCardProps) {
         >
           <Plus className="h-5 w-5 text-[var(--foreground)]" strokeWidth={2.5} />
         </button>
-      </div>
+      </Link>
 
-      <Link href={`/productos/${product.id}`} className="mt-2 flex flex-col">
+      <div className="mt-2 flex flex-col">
         {/* Tag, nombre, precio */}
         {tagLabel && (
-          <p className="text-xs font-medium uppercase tracking-wide text-[var(--txai-red)]">
+          <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
             {tagLabel}
           </p>
         )}
-        <h3 className="mt-1 font-montserrat font-semibold text-[var(--foreground)]">
+        <Link href={`/productos/${product.id}`} className="mt-1 font-montserrat font-semibold text-[#212B36] hover:underline">
           {product.name}
-        </h3>
-        <p className="mt-0.5 font-montserrat text-sm font-medium text-[var(--foreground)]">
+        </Link>
+        <p className="mt-0.5 font-montserrat text-sm font-medium text-[#212B36]">
           {formatPrice(product.price)}
         </p>
 
@@ -92,7 +123,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             />
           ))}
         </div>
-      </Link>
+      </div>
     </article>
   );
 }
