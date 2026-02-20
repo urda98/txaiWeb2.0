@@ -23,7 +23,7 @@ const banners = [
     image: "/assets/todasTxai.png",
     cta: "VER MUJER",
     objectFit: "cover",
-    objectPosition: "50% 30%",
+    objectPosition: "50% -10%",
   },
   {
     id: 3,
@@ -32,13 +32,13 @@ const banners = [
     image: "/assets/txaiPortada.png",
     cta: "COMPRAR AHORA",
     objectFit: "cover",
-    objectPosition: "50% 22%",
+    objectPosition: "50% -10%",
   }
 ];
 
 export default function HeroCarrousel() {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden h-[100vh] h-[100dvh]">
       <Swiper
         modules={[Autoplay, Pagination]}
         spaceBetween={0}
@@ -51,7 +51,7 @@ export default function HeroCarrousel() {
           clickable: true,
         }}
         loop={true}
-        className="h-[500px] md:h-[700px]"
+        className="!h-full"
       >
         {banners.map((banner) => (
           <SwiperSlide key={banner.id} className="relative">
@@ -71,8 +71,8 @@ export default function HeroCarrousel() {
               <div className="absolute inset-0 bg-black/30" />
             </div>
             
-            {/* Contenido centrado */}
-            <div className="absolute inset-0 flex items-center justify-center text-center px-4 z-10">
+            {/* Contenido centrado (desplazado hacia abajo) */}
+            <div className="absolute inset-0 flex items-center justify-center pt-[40vh] text-center px-4 z-10">
               <div className="max-w-3xl space-y-6">
                 <h2 className="text-white text-4xl md:text-7xl font-bold tracking-tight font-cinzel">
                   {banner.title}
